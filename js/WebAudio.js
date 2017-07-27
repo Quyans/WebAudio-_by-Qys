@@ -77,30 +77,33 @@ function loadAudioFile(url) {
                  stopSound();
                  loadAudioFile("music/"+index+".mp3");
                  PresentSong = index
+
              }
 
         })(i));
     }
 
 
-    function preSong(presentIndex) {
+    function preSong() {
+        console.log(PresentSong);
+        if(PresentSong>=1){
 
-        if(presentIndex>=1){
-            document.getElementById("preButton").onclick = function () {
-                console.log(presentIndex)
+
                 stopSound();
-                loadAudioFile("music/"+presentIndex-1+".mp3");
-        }
+                var lastSong = PresentSong -1;
+            loadAudioFile("music/"+lastSong+".mp3");
+
 
         }
     }
 
-    function nextSong(presentIndex) {
-        if(presentIndex<=2){
-            document.getElementById("nextButton").onclick = function () {
+    function nextSong() {
+        if(PresentSong<=1){
+
                 stopSound();
-                loadAudioFile("music/"+presentIndex+1+".mp3");
-            }
+                var nextSong = PresentSong +1;
+                loadAudioFile("music/"+nextSong+".mp3");
+
 
         }
     }

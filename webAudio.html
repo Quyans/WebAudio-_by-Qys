@@ -20,11 +20,13 @@
 
         <div id="ConsoleDiv">
             <div id="ButtonDiv">
-                <button class="ConsoleButton" id="preButton"  onclick="preSong(PresentSong)">|<</button>
+                <button class="ConsoleButton" id="preButton"  onclick="preSong()">|<</button>
                 <button class="ConsoleButton" id="playButton">play</button>
                 <button class="ConsoleButton" id="pauseButton">Pause</button>
-                <button class="ConsoleButton" id="nextButton" onclick="nextSong(PresentSong)">>|</button>
+                <button class="ConsoleButton" id="nextButton" onclick="nextSong()">>|</button>
             </div>
+            <input type="range" id="ChangeSchedule" min="1" max="1000" value="0" onchange="">
+            <input type="range" id="ChangeVoice" min="1" max="100" value="30" onchange="">
         </div>
 
 
