@@ -5,6 +5,7 @@ var context = new AudioContext();
 var source = null;
 var audioBuffer = null;
 var PresentSong;
+var SongTime = 0;
 
 
 function stopSound() {
@@ -19,20 +20,32 @@ function playSound() {
     source.connect(context.destination);
     source.start(0); //立即播放
 }
-function initSound(arrayBuffer) {
-    context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
-        audioBuffer = buffer;
-        playSound();
-    }, function(e) { //解码出错时的回调函数
-        console.log('Error decoding file', e);
-    });
-}
+// function initSound(arrayBuffer) {
+//     context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
+//         audioBuffer = buffer;
+//         playSound();
+//     }, function(e) { //解码出错时的回调函数
+//         console.log('Error decoding file', e);
+//     });
+// }
 function loadAudioFile(url) {
     var xhr = new XMLHttpRequest(); //通过XHR下载音频文件
     xhr.open('GET', url, true);
     xhr.responseType = "arraybuffer";
     xhr.onload = function(e) { //下载完成
-        initSound(this.response);
+        context.decodeAudioData(this.response, function(buffer) {
+            audioBuffer = buffer;
+            // initSound(this.response);
+            // use the dec​oded data here
+            playSound();
+            SongTime = audioBuffer.duration;
+            console.log(SongTime)
+        }, function(e) { //解码出错时的回调函数
+            console.log('Error decoding file', e);
+        })
+
+
+
     };
     xhr.send();
 }
