@@ -3,10 +3,12 @@
  */
 var context = new AudioContext();
 var source = null;
+var buffersource = null;
+var playtime = 0
 var audioBuffer = null;
 var PresentSong;
 var SongTime = 0;
-
+var gainNode = context.createGain();
 
 function stopSound() {
     if (source) {
@@ -19,7 +21,13 @@ function playSound() {
     source.loop = true;
     source.connect(context.destination);
     source.start(0); //立即播放
-}
+    source.connect(gainNode);
+
+
+
+
+
+} gainNode.connect(context.destination);
 // function initSound(arrayBuffer) {
 //     context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
 //         audioBuffer = buffer;
@@ -33,13 +41,13 @@ function loadAudioFile(url) {
     xhr.open('GET', url, true);
     xhr.responseType = "arraybuffer";
     xhr.onload = function(e) { //下载完成
-        context.decodeAudioData(this.response, function(buffer) {
+        context.decodeAudioData(this.response, function(buffer) {//解码成功时的回调函数
             audioBuffer = buffer;
-            // initSound(this.response);
-            // use the dec​oded data here
+
+
             playSound();
-            SongTime = audioBuffer.duration;
-            console.log(SongTime)
+            SongTime = audioBuffer.duration;  //获取歌曲时间
+            console.log("歌曲长度为"+SongTime)
         }, function(e) { //解码出错时的回调函数
             console.log('Error decoding file', e);
         })
@@ -120,3 +128,11 @@ function loadAudioFile(url) {
 
         }
     }
+
+    //改变音量大小
+function changeVoice() {
+    var value = document.getElementById("ChangeVoice").value;
+    var percent = value/100;
+    gainNode.gain.value = percent;
+    console.log(value,"",gainNode.gain.value)
+}
