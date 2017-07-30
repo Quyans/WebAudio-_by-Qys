@@ -9,19 +9,32 @@ var audioBuffer = null;
 var PresentSong;
 var SongTime = 0;
 var gainNode = context.createGain();
-
+//改变进度条
+var timeSec = 0 ;
+var timeFloat
+var AllIndex;
 function stopSound() {
     if (source) {
         source.stop(0); //立即停止
     }
 }
-function playSound() {
+function playSound(startTime,total) {
     source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.loop = true;
     source.connect(context.destination);
-    source.start(0); //立即播放
+    source.start(0,startTime); //立即播放
     source.connect(gainNode);
+
+    setInterval(function () {
+
+        timeSec=timeSec + 0.1;
+        timeFloat =timeSec.toFixed(1);
+        document.getElementById("timeShow").innerHTML ="时间"+ timeFloat+"s"
+
+        document.getElementById("ChangeSchedule").value = (timeSec/SongTime)*1000;
+    },100)
+
 
 
 
@@ -36,7 +49,7 @@ function playSound() {
 //         console.log('Error decoding file', e);
 //     });
 // }
-function loadAudioFile(url) {
+function loadAudioFile(url,startTime) {
     var xhr = new XMLHttpRequest(); //通过XHR下载音频文件
     xhr.open('GET', url, true);
     xhr.responseType = "arraybuffer";
@@ -45,7 +58,7 @@ function loadAudioFile(url) {
             audioBuffer = buffer;
 
 
-            playSound();
+            playSound(startTime,SongTime);
             SongTime = audioBuffer.duration;  //获取歌曲时间
             console.log("歌曲长度为"+SongTime)
         }, function(e) { //解码出错时的回调函数
@@ -98,6 +111,7 @@ function loadAudioFile(url) {
                  stopSound();
                  loadAudioFile("music/"+index+".mp3");
                  PresentSong = index
+                 AllIndex = index
 
              }
 
@@ -112,7 +126,7 @@ function loadAudioFile(url) {
 
                 stopSound();
                 var lastSong = PresentSong -1;
-            loadAudioFile("music/"+lastSong+".mp3");
+            loadAudioFile("music/"+lastSong+".mp3",0);
 
 
         }
@@ -123,7 +137,7 @@ function loadAudioFile(url) {
 
                 stopSound();
                 var nextSong = PresentSong +1;
-                loadAudioFile("music/"+nextSong+".mp3");
+                loadAudioFile("music/"+nextSong+".mp3",0);
 
 
         }
@@ -136,3 +150,13 @@ function changeVoice() {
     gainNode.gain.value = percent;
     console.log(value,"",gainNode.gain.value)
 }
+//改变进度条
+function changeSchedule() {
+    stopSound();
+    var percent = (document.getElementById("ChangeSchedule").value/1000) * SongName
+    loadAudioFile("music/"+AllIndex+".mp3",percent);
+}
+
+
+
+
