@@ -21,8 +21,8 @@
         <div id="ConsoleDiv">
             <div id="ButtonDiv">
                 <button class="ConsoleButton" id="preButton"  onclick="preSong()">|<</button>
-                <button class="ConsoleButton" id="playButton">play</button>
-                <button class="ConsoleButton" id="pauseButton">Pause</button>
+                <button class="ConsoleButton" id="playButton" onclick="continueSong()">play</button>
+                <button class="ConsoleButton" id="pauseButton" onclick="pauseSong()">Pause</button>
                 <button class="ConsoleButton" id="nextButton" onclick="nextSong()">>|</button>
             </div>
             <p id="timeShow">time</p><input type="range" id="ChangeSchedule" min="0" max="1000" value="0" onchange="changeSchedule()">

@@ -13,34 +13,63 @@ var gainNode = context.createGain();
 var timeSec = 0 ;
 var timeFloat
 var AllIndex;
+var state = 1;
+var timeSecTemper;
+var interval ;
 function stopSound() {
     if (source) {
         source.stop(0); //立即停止
+
     }
 }
 function playSound(startTime,total) {
+console.log(startTime);
     source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.loop = true;
     source.connect(context.destination);
     source.start(0,startTime); //立即播放
-    source.connect(gainNode);
-
-    setInterval(function () {
-
-        timeSec=timeSec + 0.1;
-        timeFloat =timeSec.toFixed(1);
-        document.getElementById("timeShow").innerHTML ="时间"+ timeFloat+"s"
-
-        document.getElementById("ChangeSchedule").value = (timeSec/SongTime)*1000;
-    },100)
+    source.connect(gainNode );
+    // console.log(state)
+    timeSec = startTime;
+    console.log()
+   interval = setInterval(function () {
+            if (state == 1) {
 
 
+                // console.log(timeSec)
+                timeSec = timeSec + 0.1;
+                timeFloat = timeSec.toFixed(1);
+                document.getElementById("timeShow").innerHTML = "时间" + timeFloat + "s"
 
+                document.getElementById("ChangeSchedule").value = (timeSec / SongTime) * 1000;
+                // console.log(timeSec)
 
+            }else {
+                // console.log(timeSec)
+                return
+            }
+    },100);
+    return;
 
-
+    // console.log("没有return" )
 } gainNode.connect(context.destination);
+
+//    暂停播放
+function pauseSong() {
+    state = 0;
+    stopSound();
+    clearInterval(interval);
+   timeSecTemper = timeSec;
+   console.log(timeSec);
+
+}
+
+function  continueSong() {
+    state = 1;
+    // console.log(state);
+    playSound(timeSecTemper,1);
+}
 // function initSound(arrayBuffer) {
 //     context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
 //         audioBuffer = buffer;
@@ -58,15 +87,12 @@ function loadAudioFile(url,startTime) {
             audioBuffer = buffer;
 
 
-            playSound(startTime,SongTime);
+            playSound(0,SongTime);
             SongTime = audioBuffer.duration;  //获取歌曲时间
             console.log("歌曲长度为"+SongTime)
         }, function(e) { //解码出错时的回调函数
             console.log('Error decoding file', e);
         })
-
-
-
     };
     xhr.send();
 }
